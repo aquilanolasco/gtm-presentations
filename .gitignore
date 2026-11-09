@@ -1,0 +1,31 @@
+# Secrets: every .env file stays out of git; only the names-only template is tracked
+.env
+.env.*
+!.env.example
+relay.env
+
+# Dependencies
+node_modules/
+
+# Next.js / build output (app and engine/web-deck)
+.next/
+out/
+build/
+builds/
+dist/
+next-env.d.ts
+*.tsbuildinfo
+
+# Engine outputs and generated artefacts
+exports/
+engine/engine-v2/composer/out/
+*.pdf
+*.pptx
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs and OS junk
+*.log
+.DS_Store

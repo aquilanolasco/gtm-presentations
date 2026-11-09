@@ -1,0 +1,72 @@
+{
+  "_": "The engage deck's slide library: the master slides a rep can put after the prospect's opening slides. One id space (sid): Short Pack slides keep their bare ids (the first engage build stored them that way), the others carry their deck as a prefix. Deck order here is the order they take in a generated deck. Copies of this file: the app's src/lib/engage-library.json (Create pane + API) and workers/engage/engage-library.json (worker + writer); keep them identical. `version` is appended to every thumbnail URL (?v=) so a browser that once cached a 404 for a thumbnail fetches the new file; bump it when the thumbnails are recaptured. The entries below are sample data (original slide list removed).",
+  "version": "20260101a",
+  "decks": [
+    {
+      "id": "intro",
+      "title": "Introduction deck",
+      "blurb": "Who Acme is: the platform, the team and the results (sample entry).",
+      "slides": [
+        {
+          "sid": "intro-about",
+          "id": "about",
+          "label": "Who we are",
+          "title": "Sample headline about the company"
+        },
+        {
+          "sid": "intro-platform",
+          "id": "platform",
+          "label": "The platform",
+          "title": "Sample headline about the platform",
+          "dark": true
+        }
+      ]
+    },
+    {
+      "id": "shortpack",
+      "title": "Short Pack",
+      "blurb": "The quick six: cost, modules, order to payment, today vs Acme, proof, go live. The default.",
+      "slides": [
+        {
+          "sid": "cost",
+          "id": "cost",
+          "label": "The cost today",
+          "title": "Sample headline about what the manual process costs",
+          "dark": true
+        },
+        {
+          "sid": "modules",
+          "id": "modules",
+          "label": "The modules",
+          "title": "Sample headline about the modules, one login",
+          "dark": true
+        },
+        {
+          "sid": "flow",
+          "id": "flow",
+          "label": "Order to payment",
+          "title": "Sample headline about the end-to-end flow",
+          "dark": true
+        },
+        {
+          "sid": "compare",
+          "id": "compare",
+          "label": "Today vs Acme",
+          "title": "Sample headline comparing today with Acme"
+        },
+        {
+          "sid": "proof",
+          "id": "proof",
+          "label": "Proof",
+          "title": "Sample headline about customer results"
+        },
+        {
+          "sid": "golive",
+          "id": "golive",
+          "label": "Go live",
+          "title": "Sample headline about the rollout"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generate Box — Acme</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#8b5cf6;--lp:#8b5cf6;--blue:#3b82f6;--ink:#111827;--body:#4b5563;--muted:#9ca3af;--border:#e5e7eb;
+--grad:linear-gradient(90deg,#8b5cf6 0%,#8b5cf6 50%,#3b82f6 100%)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(120% 120% at 85% 10%,#f3efff 0%,#eef3ff 40%,#fff 100%);min-height:100vh;color:var(--ink)}
+.wrap{max-width:880px;margin:0 auto;padding:3.5rem 1.5rem}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);font-weight:600}
+h1{font-size:clamp(2rem,5vw,3.2rem);margin:.4rem 0 0;letter-spacing:-.02em;text-wrap:balance}
+h1 .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--body);margin-top:.7rem;max-width:52ch;text-wrap:balance}
+.drop{margin-top:2.2rem;border-radius:26px;padding:3px;background:var(--grad);box-shadow:0 30px 80px -40px rgba(139,92,246,.55)}
+.drop-in{border-radius:23px;background:#fff;padding:clamp(2rem,5vw,3.5rem);text-align:center;border:2px dashed transparent;transition:background .2s}
+.drop.over .drop-in{background:#f5edff}
+.drop-ic{width:74px;height:74px;border-radius:22px;background:var(--grad);color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 16px 40px -14px rgba(139,92,246,.6)}
+.drop-ic svg{width:36px;height:36px}
+.drop h2{margin:1.1rem 0 0;font-size:1.35rem}
+.drop p{color:var(--muted);margin:.4rem 0 0;font-size:.92rem}
+.row{display:flex;gap:.8rem;justify-content:center;margin-top:1.4rem;flex-wrap:wrap}
+input[type=text],select{font:inherit;font-size:.92rem;padding:.65rem .9rem;border:1px solid var(--border);border-radius:11px;min-width:230px;background:#fff}
+.btn{font:inherit;font-weight:600;font-size:.95rem;color:#fff;background:var(--grad);border:0;border-radius:999px;padding:.8rem 1.9rem;cursor:pointer;white-space:nowrap;box-shadow:0 10px 26px rgba(139,92,246,.35)}
+.btn[disabled]{opacity:.5;cursor:default}
+.ghost{background:#fff;color:var(--ink);border:1px solid var(--border);box-shadow:none}
+.prog{display:none;margin-top:2rem;border:1px solid #ecebf5;border-radius:18px;background:#fff;padding:1.3rem 1.5rem}
+.prog.on{display:block}
+.bar{height:8px;border-radius:999px;background:#eceafb;overflow:hidden;margin-bottom:1rem}
+.bar i{display:block;height:100%;width:8%;border-radius:999px;background:var(--grad);transition:width .6s}
+.plog{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--body);max-height:150px;overflow-y:auto;line-height:1.7;white-space:pre-wrap}
+.done{display:none;margin-top:2rem}
+.done.on{display:block}
+.done .actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem}
+.frame{border-radius:22px;padding:3px;background:var(--grad);box-shadow:0 30px 80px -40px rgba(139,92,246,.5)}
+.frame iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:19px;background:#fff;display:block}
+.hint{color:var(--muted);font-size:.8rem;margin-top:.8rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Acme · Local bench</span>
+  <h1>Generate <span class="gt">Box</span></h1>
+  <p class="sub">Drop any document (PDF, PPTX, DOCX, text) and get a fully branded Acme deck. Runs entirely on this Mac; nothing is published.</p>
+
+  <div class="drop" id="drop">
+    <div class="drop-in">
+      <span class="drop-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 5 5m-5-5-5 5"/><path d="M4 20h16"/></svg></span>
+      <h2 id="dropTitle">Drag your file here</h2>
+      <p id="dropSub">or click to choose · PDF, PPTX, DOCX, TXT, MD, PNG</p>
+      <div class="row">
+        <input type="text" id="title" placeholder="Presentation title (optional)">
+        <select id="cover">
+          <option value="master" selected>Cover: Emblem (master)</option>
+          <option value="hybrid">Cover: Devices + emblem (hybrid)</option>
+          <option value="device">Cover: Device</option>
+          <option value="gradient">Cover: Gradient</option>
+          <option value="light">Cover: Light</option>
+        </select>
+      </div>
+      <div class="row" id="outlineRow" style="display:none"><label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;color:var(--body)"><input type="checkbox" id="wantOutline" checked style="width:16px;height:16px;accent-color:#8b5cf6">Review outline before generating</label></div>
+      <div class="row"><button class="btn" id="go" disabled>Generate presentation</button></div>
+      <input type="file" id="file" hidden accept=".pdf,.pptx,.docx,.txt,.md,.png,.jpg,.jpeg">
+    </div>
+  </div>
+
+  <div class="prog" id="prog"><div class="bar"><i id="bar"></i></div><div class="plog" id="plog"></div></div>
+
+  <div class="prog" id="outlineBox" style="display:none">
+    <h3 style="margin:.2rem 0 .8rem;font-size:1.05rem">Proposed outline, edit then approve</h3>
+    <div id="outlineList" style="display:flex;flex-direction:column;gap:.45rem;max-height:340px;overflow-y:auto"></div>
+    <div class="row" style="justify-content:flex-start;margin-top:1rem"><button class="btn" id="approve">Approve outline and generate</button></div>
+  </div>
+
+  <div class="done" id="done">
+    <div class="actions">
+      <a class="btn" id="open" target="_blank">Open presentation</a>
+      <button class="btn ghost" id="exp">Export PPTX + PDF</button>
+      <button class="btn ghost" id="expn" style="display:none">Editable PPTX (native)</button>
+      <a class="btn ghost" id="dln" style="display:none">Download editable PPTX</a>
+      <a class="btn ghost" id="dlp" style="display:none">Download PPTX</a>
+      <a class="btn ghost" id="dld" style="display:none">Download PDF</a>
+      <button class="btn ghost" id="again">Create another</button>
+    </div>
+    <div class="frame"><iframe id="preview"></iframe></div>
+    <p class="hint">This deck lives in a temp folder on this Mac. Exporting uses the same PPTX/PDF pipeline as the live app.</p>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const MODE=(location.pathname.match(/\/lane\/(\w+)/)||[])[1]||"gamma";
+const LANES={best:["Best, one pipeline","Brand file + 20 design rules + outline approval + vision QA + native PPTX export. ~3-6 min."],gamma:["Ours, Gamma quality","Brand templates + balanced palette + vision QA. ~2-4 min."],hybrid:["Hybrid, best of each","Templates first, bespoke AI design for pages no template fits, vision QA. ~3-6 min."],pptx:["Anthropic pptx skill","Headless Claude Code produces a native PPTX. Slow lane: several minutes."]};
+document.addEventListener("DOMContentLoaded",()=>{
+  const l=LANES[MODE]||LANES.gamma;
+  document.querySelector("h1").innerHTML=l[0].replace(/^(\S+)/,'<span class="gt">$1</span>');
+  document.querySelector(".sub").textContent=l[1]+" Runs entirely on this Mac; nothing is published.";
+  document.title=l[0]+" — Create Bench";
+  const bk=document.createElement("a"); bk.href="/"; bk.textContent="‹ All strategies"; bk.style.cssText="display:inline-block;margin-bottom:.8rem;color:#8b5cf6;text-decoration:none;font-weight:600;font-size:.85rem";
+  document.querySelector(".wrap").prepend(bk);
+  if(MODE==="pptx"||MODE==="copy"){ $("cover").style.display="none"; }
+  if(MODE==="pptx"){ $("exp").style.display="none"; }
+  if(MODE==="best"){ $("outlineRow").style.display="flex"; document.addEventListener("DOMContentLoaded",()=>{}); }
+});
+let picked=null, jobId=null, poll=null;
+const drop=$("drop"), file=$("file");
+drop.addEventListener("click",e=>{ if(e.target.closest("input,select,button,a"))return; file.click(); });
+["dragover","dragenter"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>{ const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) pick(f); });
+file.addEventListener("change",()=>{ if(file.files[0]) pick(file.files[0]); });
+function pick(f){ picked=f; $("dropTitle").textContent=f.name; $("dropSub").textContent=(f.size/1024/1024).toFixed(1)+" MB — ready"; $("go").disabled=false; if(!$("title").value) $("title").value=f.name.replace(/\.[^.]+$/,"").replace(/[-_]+/g," "); }
+$("go").addEventListener("click",async()=>{
+  if(!picked) return;
+  $("go").disabled=true; $("prog").classList.add("on"); $("done").classList.remove("on");
+  $("plog").textContent="Uploading…"; $("bar").style.width="10%";
+  const r=await fetch("/generate",{method:"POST",headers:{"x-filename":picked.name,"x-title":$("title").value,"x-cover":$("cover").value,"x-mode":MODE,"x-outline":(MODE==="best"&&$("wantOutline").checked)?"1":"0"},body:picked});
+  if(!r.ok){ $("plog").textContent="Upload failed: "+await r.text(); $("go").disabled=false; return; }
+  jobId=(await r.json()).id;
+  let ticks=0;
+  poll=setInterval(async()=>{
+    ticks++;
+    const s=await (await fetch("/status/"+jobId)).json();
+    if(s&&s.error==="unknown job"){clearInterval(poll);$("plog").textContent+="\nThe server restarted and lost this job. Please generate again.";$("go").disabled=false;return;}
+    $("plog").textContent=(s.log||[]).join("\n"); $("plog").scrollTop=1e6;
+    $("bar").style.width=Math.min(92,10+ticks*2.2)+"%";
+    if(s.status==="outline_ready"&&s.outline){ clearInterval(poll);
+      $("outlineBox").style.display="block"; $("outlineBox").classList.add("on");
+      const TYPES=["cover","mission","vision","features","section","kpi","metrics","focus","textimage","servicemetrics","deals","suppliers","announcements","staffsat","celebration","teamgrid","people","awards","table","bullets","split","steps","columns","chips","map","timeline","quote","proof","agenda","showcase","image","video","novel","cta"];
+      $("outlineList").innerHTML=s.outline.map((o,i)=>`<div style="display:flex;gap:.5rem;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#828fa8;width:24px">${String(i+1).padStart(2,"0")}</span><input data-i="${i}" class="ol-title" type="text" value="${(o.title||"").replace(/"/g,"&quot;")}" style="flex:1;font:inherit;font-size:.85rem;padding:.45rem .6rem;border:1px solid var(--border);border-radius:8px"><select data-i="${i}" class="ol-type" style="font:inherit;font-size:.8rem;padding:.45rem;border:1px solid var(--border);border-radius:8px">${TYPES.map(t=>`<option${t===o.type?" selected":""}>${t}</option>`).join("")}</select><button data-i="${i}" class="ol-del" style="border:0;background:none;color:#f43f5e;cursor:pointer;font-weight:700">×</button></div>`).join("");
+      window._outline=s.outline;
+      document.querySelectorAll(".ol-del").forEach(b=>b.onclick=()=>{window._outline.splice(+b.dataset.i,1);b.parentElement.remove();});
+      return; }
+    if(s.status==="ready"){ clearInterval(poll); $("bar").style.width="100%";
+      $("open").href="/deck/"+jobId+"/"; $("preview").src="/deck/"+jobId+"/";
+      if(MODE==="best")$("expn").style.display="";
+      $("done").classList.add("on"); $("go").disabled=false; }
+    if(s.status==="failed"){ clearInterval(poll); $("plog").textContent+="\nFAILED: "+(s.error||""); $("go").disabled=false; }
+  },1500);
+});
+$("approve").addEventListener("click",async()=>{
+  document.querySelectorAll(".ol-title").forEach(inp=>{const i=+inp.dataset.i;if(window._outline[i])window._outline[i].title=inp.value;});
+  document.querySelectorAll(".ol-type").forEach(sel=>{const i=+sel.dataset.i;if(window._outline[i])window._outline[i].type=sel.value;});
+  $("outlineBox").style.display="none";
+  await fetch("/approve/"+jobId,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({outline:window._outline})});
+  poll=setInterval(async()=>{
+    const s=await (await fetch("/status/"+jobId)).json();
+    $("plog").textContent=(s.log||[]).join("\n"); $("plog").scrollTop=1e6;
+    if(s.status==="ready"){ clearInterval(poll); $("bar").style.width="100%"; $("open").href="/deck/"+jobId+"/"; $("preview").src="/deck/"+jobId+"/"; $("done").classList.add("on"); $("go").disabled=false; }
+    if(s.status==="failed"){ clearInterval(poll); $("plog").textContent+="\nFAILED: "+(s.error||""); $("go").disabled=false; }
+  },1500);
+});
+$("exp").addEventListener("click",async()=>{
+  $("exp").disabled=true; $("exp").textContent="Exporting…";
+  await fetch("/export/"+jobId,{method:"POST"});
+  const t=setInterval(async()=>{
+    const s=await (await fetch("/status/"+jobId)).json();
+    if(s.status==="ready"&&(s.exports!==undefined)){ clearInterval(t);
+      $("exp").style.display="none";
+      if(s.exports){ $("dlp").href="/file/"+jobId+"/"+jobId+".pptx"; $("dld").href="/file/"+jobId+"/"+jobId+".pdf"; $("dlp").style.display=""; $("dld").style.display=""; }
+      else { $("exp").style.display=""; $("exp").disabled=false; $("exp").textContent="Export failed — retry"; }
+    }
+  },2000);
+});
+$("expn").addEventListener("click",async()=>{
+  $("expn").disabled=true; $("expn").textContent="Building…";
+  await fetch("/exportnative/"+jobId,{method:"POST"});
+  const t=setInterval(async()=>{
+    const s=await (await fetch("/status/"+jobId)).json();
+    if(s.native===true){clearInterval(t);$("expn").style.display="none";$("dln").href="/file/"+jobId+"/deck-native.pptx";$("dln").style.display="";}
+    if(s.native===false){clearInterval(t);$("expn").disabled=false;$("expn").textContent="Editable PPTX failed, retry";}
+  },1500);
+});
+$("again").addEventListener("click",()=>{ picked=null; jobId=null; $("done").classList.remove("on"); $("prog").classList.remove("on"); $("dropTitle").textContent="Drag your file here"; $("dropSub").textContent="or click to choose · PDF, PPTX, DOCX, TXT, MD, PNG"; $("go").disabled=true; $("title").value=""; $("dlp").style.display="none"; $("dld").style.display="none"; $("exp").style.display=""; $("exp").disabled=false; $("exp").textContent="Export PPTX + PDF"; });
+</script>
+</body>
+</html>

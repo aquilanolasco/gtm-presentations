@@ -1,0 +1,256 @@
+/* ============================================================================
+   Acme presentation kit, shared across every deck
+   Light brand. Display headings via --disp (thin weight), Inter fallback.
+   ============================================================================ */
+.pp{
+  --ink:#0f1424; --body:#4b5563; --muted:#9aa0b0;
+  --purple:#8b5cf6; --magenta:#8b5cf6; --blue:#3b82f6; --green:#10b981; --cyan:#3dc9f4;
+  --bg:#ffffff; --border:#ecebf5;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#8b5cf6 50%,#3b82f6 100%);
+  --grad-soft:linear-gradient(135deg,#f7f1ff 0%,#eef3ff 100%);
+  --grad-deep:linear-gradient(140deg,#8b5cf6 0%,#3b82f6 100%);
+  --shadow:0 30px 80px rgba(139,92,246,.18);
+  --shadow-sm:0 14px 40px rgba(15,20,36,.09);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --disp:"Brand Display",Inter,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--body);background:var(--bg);
+}
+.pp h1,.pp h2,.pp h3,.pp .disp{
+  font-family:var(--disp);font-weight:344;color:var(--ink);
+  letter-spacing:-.02em;line-height:1.02;text-wrap:balance;
+}
+.pp p{text-wrap:balance}
+.pp .mono{font-family:var(--mono)}
+.pp .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pp .grad-move{background:linear-gradient(90deg,#8b5cf6,#8b5cf6,#3b82f6,#8b5cf6);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ppgrad 5s linear infinite}
+@keyframes ppgrad{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* Scroll-snap slide system */
+.pp-deck{scroll-behavior:smooth;background:transparent}
+/* ===== cross-fading background planes =====
+   Every slide background is painted here, on fixed full-viewport planes, so moving
+   between a white, gradient or dark slide CROSS-FADES the colour instead of scrolling
+   past a hard horizontal edge. Driven by data-navbg / the active background in DeckShell. */
+.pp-bgfade{position:fixed;inset:0;z-index:0;pointer-events:none;background:#fff}
+.pp-bgfade .ppbg{position:absolute;inset:0;opacity:0;transition:opacity .8s var(--ease)}
+.pp-bgfade .ppbg.on{opacity:1}
+.pp-bgfade .ppbg-grad{background:linear-gradient(140deg,#8b5cf6 0%,#8b5cf6 50%,#3b82f6 100%)}
+.pp-bgfade .ppbg-dark{background:#060510}
+.pp-bgfade .ppbg-mod{background:linear-gradient(150deg,#8b5cf6,#3b82f6)}
+.pp-slide{position:relative;min-height:100vh;display:flex;align-items:center;
+  padding:clamp(2.5rem,6vw,6rem) clamp(2.5rem,7vw,8rem) clamp(2.5rem,6vw,6rem) clamp(14.5rem,16vw,16rem);overflow:visible}
+/* tall slide keeps the SAME left-nav gutter as normal slides, so its centered
+   content lines up optically with every other centered slide (not the raw viewport) */
+.pp-slide--tall{min-height:auto;overflow:visible;display:block;padding:1rem clamp(2.5rem,7vw,8rem) 1rem clamp(14.5rem,16vw,16rem);text-align:center}
+.pp-inner{width:100%;max-width:1180px;margin:0 auto}
+.pp-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+/* ===== soft edges between slide backgrounds =====
+   A slide that paints its own light background paints it on a masked layer whose
+   top and bottom fade out over a short distance. Scrolling from a white slide onto
+   a dark or gradient one then dissolves across the boundary instead of cutting on a
+   hard horizontal line. The coloured slides carry their own edge gradients already. */
+.pp-slide{--pp-edge:clamp(56px,7vh,110px)}
+.pp-soft,.pp-soft2,.pp-slide.msl-st,.pp-slide.brand-slide{background:transparent}
+.pp-soft::before,.pp-soft2::before,.pp-slide.msl-st::before,.pp-slide.brand-slide::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:#fff;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0,#000 var(--pp-edge),#000 calc(100% - var(--pp-edge)),rgba(0,0,0,0) 100%);
+          mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0,#000 var(--pp-edge),#000 calc(100% - var(--pp-edge)),rgba(0,0,0,0) 100%)}
+.pp-soft::before{background:radial-gradient(1200px 720px at 82% 16%,#f5efff 0%,rgba(245,239,255,0) 60%),#fff}
+.pp-soft2::before{background:radial-gradient(900px 560px at 12% 88%,#eef3ff 0%,rgba(238,243,255,0) 60%),#fff}
+/* the content sits above that layer */
+.pp-slide>.pp-inner{position:relative;z-index:1}
+
+/* Type scale — thin display */
+.pp .eyebrow{font-family:var(--mono);font-size:.95rem;letter-spacing:.18em;text-transform:uppercase;color:var(--purple);font-weight:600;display:inline-block;margin-bottom:1.3rem}
+.pp .title{font-size:clamp(2.9rem,6.4vw,5.4rem);font-weight:344;line-height:.98}
+.pp .h2{font-size:clamp(2.3rem,4.7vw,3.9rem);font-weight:344}
+.pp .lead{font-size:clamp(1.3rem,1.75vw,1.65rem);line-height:1.55;color:var(--body);max-width:46ch;margin-top:1.3rem}
+.pp .kicker{font-family:var(--mono);font-size:1.05rem;color:var(--muted);margin-top:1.7rem}
+
+/* Left side-nav (subtle, modern) — section nav for the deck */
+.pp-sidenav{position:fixed;left:0;top:0;bottom:0;width:clamp(9rem,13vw,14rem);z-index:40;
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.2rem;padding:2rem 1.2rem;pointer-events:none;overflow-x:visible}
+/* logo cross-fade stack: three lockups, opacity driven by the background behind it */
+.pp-logo-stack{position:absolute;top:1.5rem;left:1.4rem;height:64px}
+.pp-logo-stack .lo{height:64px;width:auto;object-fit:contain;transition:opacity .6s var(--ease)}
+.pp-logo-stack .lo-color{position:relative;display:block}
+.pp-logo-stack .lo-rev,.pp-logo-stack .lo-white{position:absolute;top:0;left:0}
+.pp .lo-color{opacity:1}.pp .lo-rev,.pp .lo-white{opacity:0}
+.pp[data-logobg="dark"] .lo-color{opacity:0}.pp[data-logobg="dark"] .lo-white{opacity:1}
+.pp[data-logobg="grad"] .lo-color{opacity:0}.pp[data-logobg="grad"] .lo-white{opacity:1}
+.pp-sidenav__item{position:relative;pointer-events:auto;display:flex;align-items:center;padding:.42rem .9rem .42rem 4rem;margin:.1rem 0;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.02em;color:var(--muted);cursor:pointer;white-space:nowrap;
+  background:none;border:none;border-radius:999px;text-align:left;transition:color .3s var(--ease),background .3s var(--ease)}
+.pp-sidenav__item .bar{position:absolute;left:2.9rem;top:50%;transform:translateY(-50%);width:14px;height:2px;background:var(--border);border-radius:2px;transition:all .3s var(--ease)}
+/* dense variant: decks with many slides — every slide keeps its own menu item.
+   Top-aligned below the logo (never overlaps it) and scrolls if the window is short. */
+.pp-sidenav--dense{gap:.05rem;padding:2rem 1.4rem;justify-content:center;overflow-y:auto}
+.pp-sidenav--dense .pp-sidenav__item{padding:.22rem .7rem .22rem 2.5rem;margin:.03rem 0;font-size:.6rem;flex-shrink:0}
+.pp-sidenav--dense .pp-sidenav__item .bar{width:10px;left:1.3rem}
+@media(max-height:820px){.pp-sidenav--dense .pp-sidenav__item{padding:.16rem .7rem .16rem 2.5rem;font-size:.56rem}}
+/* narrow windows: hide the sidebar entirely, content already drops its left padding */
+@media(max-width:1000px){.pp-sidenav{display:none}}
+.pp-sidenav__item span:last-child{white-space:nowrap}
+.pp-sidenav__item.on{color:#fff;background:var(--grad);gap:0}
+.pp-sidenav__item.on .bar{display:none}
+/* on gradient or dark backgrounds the nav labels go white (smoothly, via the item transition) */
+.pp[data-navbg="grad"] .pp-sidenav__item,.pp[data-navbg="dark"] .pp-sidenav__item{color:rgba(255,255,255,.82)}
+.pp[data-navbg="grad"] .pp-sidenav__item .bar,.pp[data-navbg="dark"] .pp-sidenav__item .bar{background:rgba(255,255,255,.5)}
+.pp[data-navbg="grad"] .pp-sidenav__item.on,.pp[data-navbg="dark"] .pp-sidenav__item.on{background:#fff}
+.pp[data-navbg="grad"] .pp-sidenav__item.on span,.pp[data-navbg="dark"] .pp-sidenav__item.on span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pp[data-navbg="grad"] .pp-rail button,.pp[data-navbg="dark"] .pp-rail button{background:rgba(255,255,255,.5)}
+.pp[data-navbg="grad"] .pp-rail button.on,.pp[data-navbg="dark"] .pp-rail button.on{background:#fff}
+@media(max-width:900px){.pp-sidenav{display:none}}
+
+/* Right nav dots + arrows */
+.pp-rail{position:fixed;right:clamp(12px,2vw,26px);top:50%;transform:translateY(-50%);z-index:40;width:36px;display:flex;flex-direction:column;align-items:center;gap:11px}
+.pp-rail button{width:9px;height:9px;border-radius:50%;border:none;background:#d8d5ea;cursor:pointer;padding:0;transition:all .3s var(--ease)}
+.pp-rail button.on{background:var(--purple);transform:scale(1.4)}
+.pp-slidenum{position:fixed;right:clamp(14px,2vw,28px);bottom:14px;z-index:40;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--muted);transition:color .6s var(--ease)}
+.pp[data-navbg="grad"] .pp-slidenum,.pp[data-navbg="dark"] .pp-slidenum{color:rgba(255,255,255,.7)}
+@media(max-width:900px){.pp-slidenum{display:none}}
+/* arrows: white bg = gradient circle + white arrow; gradient bg = white circle + purple
+   arrow; dark bg = black-transparent circle + white arrow. Cross-fades on scroll. */
+.pp-arrow{position:fixed;right:clamp(12px,2vw,26px);z-index:40;width:36px;height:36px;border-radius:50%;border:1px solid transparent;background:var(--grad);color:#fff;cursor:pointer;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;transition:background .6s var(--ease),color .6s var(--ease),border-color .6s var(--ease)}
+.pp[data-navbg="grad"] .pp-arrow{background:#fff;color:var(--purple);border-color:transparent}
+.pp[data-navbg="dark"] .pp-arrow{background:rgba(0,0,0,.35);color:#fff;border-color:rgba(255,255,255,.45)}
+.pp-arrow.up{bottom:calc(50% + 130px)} .pp-arrow.down{top:calc(50% + 130px)}
+.pp-rail.dense{gap:6px}
+.pp-rail.dense button{width:6.5px;height:6.5px}
+.pp-arrow.dense.up{bottom:calc(50% + 225px)} .pp-arrow.dense.down{top:calc(50% + 225px)}
+@media(max-width:900px){.pp-rail,.pp-arrow{display:none}}
+
+/* Progress */
+.pp-progress{position:fixed;top:0;left:0;right:0;height:3px;transform-origin:0%;background:var(--grad);z-index:50}
+
+/* Character art: animated float (transparent PNG) */
+.pp-char{position:absolute;object-fit:contain;filter:drop-shadow(0 24px 40px rgba(15,20,36,.14));animation:pp-float 6s var(--ease) infinite}
+@keyframes pp-float{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-16px) rotate(.5deg)}}
+.pp-char.d1{animation-delay:-1.5s}.pp-char.d2{animation-delay:-3s}.pp-char.d3{animation-delay:-4.5s}
+
+/* Cards / stats / bullets */
+.pp .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.pp .card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:clamp(1.4rem,2.2vw,2rem);box-shadow:var(--shadow-sm)}
+.pp .card .ic{width:46px;height:46px;border-radius:13px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.pp .card h3{font-size:1.7rem;margin-bottom:.5rem}
+.pp .card p{font-size:1.2rem;color:var(--body);line-height:1.5}
+.pp .stat .v{font-family:var(--disp);font-weight:500;font-size:clamp(3.6rem,5.6vw,5.6rem);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pp .stat .l{font-size:1.2rem;color:var(--muted);margin-top:.6rem}
+.pp .bullets{list-style:none;margin-top:1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.pp .bullets li{position:relative;padding-left:2rem;font-size:1.4rem;color:var(--body)}
+.pp .bullets li::before{content:"";position:absolute;left:0;top:.55em;width:11px;height:11px;border-radius:50%;background:var(--grad)}
+.pp .pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.75rem;letter-spacing:.05em;color:var(--purple);background:#f5f3ff;padding:.55rem 1.1rem;border-radius:999px;font-weight:600}
+.pp .btn{display:inline-block;background:var(--grad);color:#fff;font-weight:600;font-size:1.05rem;padding:.95rem 2.1rem;border-radius:999px;text-decoration:none;white-space:nowrap;box-shadow:var(--shadow)}
+.pp .btn-white{background:#fff;color:var(--purple)}
+
+/* Reveal (JS toggles .in on active slide) */
+.pp[data-armed] .r{opacity:0;transform:translateY(34px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+/* whole-slide entrance: every transition between slides animates */
+.pp-slide>.pp-inner{opacity:0;transform:translateY(46px) scale(.985);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.pp-slide.in>.pp-inner{opacity:1;transform:none}
+/* The opening slide is visible with no JS at all. The reveal observer only fires
+   reliably once something scrolls, so relying on it left the cover blank on load. */
+.pp-deck>.pp-slide:first-of-type>.pp-inner,
+.pp-deck>.pp-slide:first-of-type .r,
+.pp-deck>.pp-slide:first-of-type .stagger>*,
+.pp-deck>.pp-slide:first-of-type .frag{opacity:1;transform:none}
+.pp-slide.in .r{opacity:1;transform:none}
+.pp-slide.in .r:nth-child(2){transition-delay:.08s}
+.pp-slide.in .r:nth-child(3){transition-delay:.16s}
+.pp-slide.in .r:nth-child(4){transition-delay:.24s}
+.pp-slide.in .r:nth-child(5){transition-delay:.32s}
+.pp .stagger>*{opacity:0;transform:translateY(34px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.pp-slide.in .stagger>*:nth-child(1){transition-delay:.12s}
+.pp-slide.in .stagger>*:nth-child(2){transition-delay:.26s}
+.pp-slide.in .stagger>*:nth-child(3){transition-delay:.4s}
+.pp-slide.in .stagger>*:nth-child(4){transition-delay:.54s}
+.pp-slide.in .stagger>*{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){.pp .r,.pp .stagger>*{opacity:1!important;transform:none!important}.pp-char{animation:none}}
+@media(max-width:1000px){.pp-slide{padding:5rem 1.6rem}.pp-split{grid-template-columns:1fr;gap:2rem}.pp .grid3{grid-template-columns:1fr}}
+
+/* perf: offscreen slides do not burn compositor/CPU on looping animations.
+   DeckShell adds .in when a slide enters the viewport; everything resumes there. */
+.pp-slide:not(.in) *{animation-play-state:paused!important}
+
+/* ===== short-viewport responsiveness (laptops, connected small screens) =====
+   Scale type + padding down as viewport height shrinks so no slide overflows its
+   own frame. Applies deck-wide; slide-specific inline sizes are overridden where
+   they'd otherwise stay large. */
+@media(max-height:840px){
+  .pp .title{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1}
+  .pp .h2{font-size:clamp(1.75rem,3.5vw,2.8rem)}
+  .pp .lead{font-size:clamp(1.02rem,1.4vw,1.28rem);line-height:1.45;margin-top:.9rem}
+  .pp-slide{padding-top:clamp(1.4rem,3.5vh,3rem);padding-bottom:clamp(1.4rem,3.5vh,3rem)}
+  #promise .h2{font-size:clamp(1.8rem,3.6vw,2.7rem)!important}
+  #promise .lead{font-size:clamp(1rem,1.4vw,1.25rem)!important;margin-top:.7rem!important}
+  #value .h2,#voices .h2{font-size:clamp(1.7rem,3.4vw,2.6rem)!important}
+}
+@media(max-height:700px){
+  .pp .h2{font-size:clamp(1.55rem,3.1vw,2.3rem)}
+  .pp .lead{font-size:clamp(.98rem,1.3vw,1.18rem);margin-top:.6rem}
+  .pp .eyebrow{margin-bottom:.8rem}
+  .pp-slide{padding-top:clamp(1rem,2.5vh,2rem);padding-bottom:clamp(1rem,2.5vh,2rem)}
+  #promise .h2{font-size:clamp(1.6rem,3.2vw,2.3rem)!important}
+}
+
+/* dense native-container module slides (budgeting stats board, reporting tiles):
+   compress gaps/padding on short viewports so all cards stay in one frame */
+@media(max-height:840px){
+  .msl-st .mst-stage{padding-top:1.4vh;padding-bottom:1.4vh}
+  .msl-st .mst-head{margin-bottom:.7rem}
+  .msl-st .mst-head .h2{font-size:clamp(1.6rem,2.9vw,2.5rem)}
+  .msl-st .mst-savings{margin-bottom:.7rem}
+  .msl-st .mst-card{padding:.72rem 1rem}
+  .msl-st .mst-kpis{margin-top:.7rem}
+  .msl-st .mst-svg{max-height:15vh}
+  .msl-st .mst-brk{margin-top:.4rem}
+  .msl-gl .mgl-tile{min-height:0}
+  .msl-gl .mgl-head .h2{font-size:clamp(1.7rem,3vw,2.6rem)}
+}
+
+/* clients logo belt + how-it-works fan: compress on short viewports so the bottom
+   row / bottom card isn't clipped on laptop screens */
+@media(max-height:860px){
+  .lb-row{padding:10px 0 12px!important}
+  .lb-item{width:clamp(140px,12vw,182px)!important}
+  .lb-wrap{margin-top:.9rem!important;gap:.5rem!important}
+}
+@media(max-height:720px){
+  .lb-item{width:clamp(120px,11vw,160px)!important}
+  .lb-row{padding:7px 0 9px!important}
+}
+
+/* ===== Proposed / Current design switch ===== */
+/* inline pill inside the top-right control cluster (.v2-topctl), matching the
+   Full screen / Presentations buttons */
+.pp-modeswitch{display:flex;gap:.15rem;padding:.22rem;border-radius:999px;background:rgba(255,255,255,.92);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);backdrop-filter:blur(8px)}
+.pp-modeswitch button{appearance:none;border:0;cursor:pointer;font-family:var(--mono);font-size:.72rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;padding:7px 13px;border-radius:999px;color:#6b6f86;background:transparent;transition:all .25s var(--ease)}
+.pp-modeswitch button.on{background:var(--grad);color:#fff;box-shadow:0 6px 16px -6px rgba(139,92,246,.6)}
+/* Current mode: reveal the static current-home poster by hiding the live proposed iframe */
+.pp[data-mode="current"] #dashFrame iframe:not(.cur-frame),.pp[data-mode="current"] #dashFrame .f7-load{display:none!important}
+@media(max-width:900px){.pp-modeswitch button{font-size:.62rem;padding:6px 9px}}
+
+/* embedded (Presentations preview iframe): hide the present-only top controls */
+html[data-embed] .v2-topctl{display:none!important}
+
+/* EXPORT mode (PDF / PPTX capture via export-deck.mjs, which adds .pp-export to .pp): strip ALL interactive
+   chrome — left section nav, right dots rail + arrows, top progress bar, the present-mode toolbar and the
+   Proposed/Current switch. Keep ONLY the bottom page count, and reclaim the sidenav's left gutter. */
+.pp.pp-export .pp-sidenav,.pp.pp-export .pp-rail,.pp.pp-export .pp-arrow,.pp.pp-export .pp-progress,
+.pp.pp-export .v2-ctl,.pp.pp-export .v2-back,.pp.pp-export .pp-modeswitch{display:none!important}
+.pp.pp-export .pp-slide{padding-left:clamp(2.5rem,6vw,6rem)!important;padding-right:clamp(2.5rem,6vw,6rem)!important}
+.pp.pp-export .pp-slide--tall{padding-left:clamp(2.5rem,6vw,6rem)!important;padding-right:clamp(2.5rem,6vw,6rem)!important}
+
+/* Faded industry background photo on light slides (opt-in via .hasbg). Shared by all decks. */
+.pp-slide.hasbg{position:relative}
+.pp-slide.hasbg>.slide-bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;
+  opacity:.26;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.58) 40%,rgba(0,0,0,.58) 60%,rgba(0,0,0,.95) 100%);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.58) 40%,rgba(0,0,0,.58) 60%,rgba(0,0,0,.95) 100%)}
+.pp-slide.hasbg>*:not(.slide-bgphoto){position:relative;z-index:1}
+.pp-slide.hasbg>.pp-inner{position:relative;z-index:1}
+

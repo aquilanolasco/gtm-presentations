@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+:root{
+  --ink:#111827; --body:#4b5563; --muted:#9ca3af;
+  --primary:#8b5cf6; --secondary:#3b82f6; --accent:#8b5cf6; --green:#10b981;
+  --bg:#ffffff; --elevated:#f5f3ff; --border:#ececf5;
+  --grad:linear-gradient(90deg,#8b5cf6 0%,#8b5cf6 50%,#3b82f6 100%);
+  --grad-soft:linear-gradient(135deg,#f6f0ff 0%,#eef3ff 100%);
+  --grad-deep:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 100%);
+  --shadow-visual:0 40px 90px rgba(139,92,246,.22);
+  --shadow-card:0 12px 34px rgba(17,24,39,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-inter),system-ui,sans-serif;
+  color:var(--body);background:var(--bg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-inter),sans-serif;color:var(--ink);line-height:1.04;letter-spacing:-.025em;text-wrap:balance}
+p{text-wrap:balance}
+.mono{font-family:var(--font-mono),monospace}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.accent{color:var(--primary)}
+::selection{background:var(--accent);color:#fff}
+
+.progress-bar{position:fixed;top:0;left:0;right:0;height:4px;transform-origin:0%;background:var(--grad);z-index:100}
+.fixed-logo{position:fixed;top:24px;left:32px;height:26px;z-index:90}
+.fixed-logo img{height:100%}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px;width:100%}
+.wrap-split{max-width:1180px;margin:0 auto;padding:0 40px;width:100%;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:72px;align-items:center}
+.section{padding:120px 0}
+.section.soft{background:radial-gradient(900px 520px at 20% 30%,#f6f0ff 0%,rgba(246,240,255,0) 60%),#fff}
+
+.eyebrow{font-family:var(--font-mono),monospace;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--primary);font-weight:600;display:inline-block}
+.h2{font-size:clamp(30px,4.4vw,54px);font-weight:800;margin-top:14px}
+.lead{font-size:19px;line-height:1.6;color:var(--body);max-width:46ch;margin-top:18px}
+
+.badge{display:inline-flex;align-items:center;font-family:var(--font-mono),monospace;font-size:12.5px;
+  letter-spacing:.05em;color:var(--primary);background:var(--elevated);padding:9px 18px;
+  border-radius:999px;margin-bottom:26px;font-weight:600}
+
+/* cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.card{background:#fff;border:1px solid var(--border);border-radius:26px;padding:32px;box-shadow:var(--shadow-card);height:100%}
+.card-n{width:42px;height:42px;border-radius:12px;background:var(--grad);color:#fff;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.card h3{font-size:22px;margin-bottom:8px}
+.card p{font-size:15.5px;color:var(--body);line-height:1.5}
+
+/* stats band */
+.stats-band{background:#0f172a;position:relative;overflow:hidden}
+.stats-band::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 400px at 80% 10%,rgba(139,92,246,.35),transparent 60%);pointer-events:none}
+.stat-v{font-size:clamp(42px,4.8vw,64px);font-weight:700;line-height:1;
+  background:linear-gradient(90deg,#c9b3ff,#8ea6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-l{font-size:14.5px;color:rgba(255,255,255,.72);margin-top:12px;line-height:1.4}
+
+/* browser card (3D container scroll) */
+.browser-card{border-radius:18px;overflow:hidden;box-shadow:var(--shadow-visual);border:1px solid var(--border);background:#fff}
+.browser-bar{height:38px;background:#f4f3fb;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--border)}
+.browser-bar span{width:11px;height:11px;border-radius:50%;background:#d7d5e6}
+.browser-bar span:nth-child(1){background:#ff6058}.browser-bar span:nth-child(2){background:#ffbd2e}.browser-bar span:nth-child(3){background:#28ca42}
+
+/* horizontal flow cards */
+.flow-card{flex:0 0 clamp(320px,42vw,560px);background:#fff;border:1px solid var(--border);
+  border-radius:26px;padding:26px;box-shadow:var(--shadow-card)}
+.flow-n{font-family:var(--font-mono),monospace;font-size:14px;font-weight:600;color:#fff;width:38px;height:38px;
+  border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.flow-img{width:100%;border-radius:14px;box-shadow:var(--shadow-card);display:block}
+
+/* chart */
+.chart-card{background:#0f172a;border-radius:28px;padding:30px 32px;box-shadow:var(--shadow-visual)}
+
+/* bullets */
+.bullet{position:relative;padding-left:30px;font-size:18px;color:var(--body);margin:14px 0}
+.bullet .dot{position:absolute;left:0;top:.5em;width:11px;height:11px;border-radius:50%;background:var(--grad)}
+
+/* CTA */
+.cta{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px;background:var(--grad-deep)}
+.btn-white{display:inline-block;margin-top:32px;background:#fff;color:var(--primary);font-weight:600;font-size:17px;
+  padding:16px 34px;border-radius:999px;text-decoration:none;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.18)}
+
+@media (max-width:900px){
+  .wrap-split{grid-template-columns:1fr;gap:36px}
+  .grid3{grid-template-columns:1fr}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .wrap,.wrap-split{padding:0 22px}
+  .section{padding:80px 0}
+  .fixed-logo{top:18px;left:20px}
+}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* ===== optional brand display face (files not included; falls back to Inter) ===== */
+@font-face{
+  font-family:"Brand Display";
+  src:url("/fonts/brand-display-400.woff2") format("woff2");
+  font-weight:344; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Brand Display";
+  src:url("/fonts/brand-display-500.woff2") format("woff2");
+  font-weight:500; font-style:normal; font-display:swap;
+}
+
+/* ===== card-fan-carousel (21st.dev) supporting layout ===== */
+.fan-layout{position:relative;width:100%;height:31rem}
+/* cards are 4:5 to match the source photos (no cropping) */
+.fan-card{position:absolute;top:50%;left:50%;width:20rem;height:25rem;margin:-12.5rem 0 0 -10rem;
+  border-radius:1.25rem;overflow:hidden;background:#fff;will-change:transform;
+  box-shadow:0 26px 70px rgba(15,20,36,.26),0 4px 14px rgba(15,20,36,.10)}
+/* caption overlay: each card names a product characteristic */
+.fan-cap{position:absolute;left:0;right:0;bottom:0;padding:2.4rem 1.1rem 1.1rem;z-index:12;pointer-events:none;
+  background:linear-gradient(to top,rgba(11,12,22,.82),rgba(11,12,22,.35) 55%,transparent);
+  color:#fff;text-align:left}
+.fan-cap .k{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin-bottom:.3rem}
+.fan-cap .t{display:block;font-family:"Brand Display",Inter,system-ui,sans-serif;font-weight:400;font-size:1.15rem;line-height:1.12;letter-spacing:-.01em;text-wrap:balance}
+@media(max-width:1024px){.fan-layout{height:28rem}.fan-card{width:17rem;height:21.25rem;margin:-10.6rem 0 0 -8.5rem}}
+@media(max-width:768px){.fan-layout{height:23rem}.fan-card{width:13rem;height:16.25rem;margin:-8.1rem 0 0 -6.5rem}}
+@media(max-width:640px){.fan-layout{height:22rem}}
+@media(max-width:480px){.fan-layout{height:19rem}.fan-card{width:11rem;height:13.75rem;margin:-6.9rem 0 0 -5.5rem}}
+/* short viewports (laptops): the fan must scale by HEIGHT too, or it overflows the
+   slide. Ratio stays 4:5; margins are always -height/2 (top) and -width/2 (left). */
+@media(max-height:860px){.fan-layout{height:27rem}.fan-card{width:16.6rem;height:20.75rem;margin:-10.375rem 0 0 -8.3rem}}
+@media(max-height:760px){.fan-layout{height:23.5rem}.fan-card{width:14.4rem;height:18rem;margin:-9rem 0 0 -7.2rem}}
+@media(max-height:660px){.fan-layout{height:20rem}.fan-card{width:12.4rem;height:15.5rem;margin:-7.75rem 0 0 -6.2rem}}

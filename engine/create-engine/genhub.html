@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create Bench — three strategies</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--grad:linear-gradient(90deg,#8b5cf6,#8b5cf6,#3b82f6);--ink:#0f172a;--body:#333d52;--mute:#828fa8;--line:#e6eaf4}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(120% 120% at 85% 0%,#f3efff 0%,#eef3ff 40%,#fff 100%);min-height:100vh;color:var(--ink)}
+.wrap{max-width:1040px;margin:0 auto;padding:3.5rem 1.5rem}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#8b5cf6;font-weight:600}
+h1{font-size:clamp(2rem,5vw,3rem);margin:.4rem 0 0;letter-spacing:-.02em}
+h1 .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--body);margin-top:.7rem;max-width:62ch}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.4rem}
+.card{display:block;text-decoration:none;color:inherit;border-radius:22px;padding:2px;background:var(--line);transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 30px 70px -40px rgba(15,23,42,.45)}
+.card.hot{background:var(--grad)}
+.card-in{border-radius:20px;background:#fff;padding:1.6rem 1.7rem;height:100%}
+.num{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:.72rem;letter-spacing:.1em;color:#8b5cf6}
+.card h2{margin:.45rem 0 .4rem;font-size:1.25rem;color:var(--ink)}
+.card p{margin:0;color:var(--body);font-size:.9rem;line-height:1.5}
+.tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.9rem}
+.tag{font-size:.68rem;font-weight:600;padding:.28rem .6rem;border-radius:999px;background:#f1e3ff;color:#7c3aed}
+.tag.b{background:#e4efff;color:#0ea5e9}.tag.t{background:#dff9fa;color:#0d9488}.tag.r{background:#ffe7ee;color:#f43f5e}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#d0cade;margin-right:.4rem;vertical-align:1px}
+.dot.up{background:#10b981}
+.hint{color:var(--mute);font-size:.8rem;margin-top:1.6rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Acme · Local bench · nothing publishes</span>
+  <h1>Create <span class="gt">Bench</span></h1>
+  <p class="sub">Three strategies for "drop a document, get a branded presentation." Feed each the same file and judge which is the most consistent.</p>
+  <div class="grid">
+    <a class="card hot" href="/lane/gamma">
+      <div class="card-in">
+        <span class="num">STRATEGY 1</span>
+        <h2>Ours — Gamma quality</h2>
+        <p>Our deterministic brand engine with the balanced Brand-Kit palette (deep ink titles, rotating violet/azure/teal/rose accents), a use-every-asset rule, and a vision QA pass that screenshots each slide and fixes weak ones.</p>
+        <div class="tags"><span class="tag">25 brand templates</span><span class="tag b">Vision QA</span><span class="tag t">Full asset coverage</span></div>
+      </div>
+    </a>
+    <a class="card hot" href="/lane/copy">
+      <div class="card-in">
+        <span class="num">⭐ RECOMMENDED · COPY</span>
+        <h2>Keep the original slides</h2>
+        <p>For decks that are already well designed (PDF/PPTX): keep every slide exactly as-is and wrap them in our navigable shell with PDF/PPTX export. No AI redraw, no oversimplifying, ~1 min, 0 tokens.</p>
+        <div class="tags"><span class="tag">Faithful copy</span><span class="tag b">~1 min</span><span class="tag t">0 tokens</span></div>
+      </div>
+    </a>
+    <a class="card hot" href="/lane/best">
+      <div class="card-in">
+        <span class="num">NEW · BEST</span>
+        <h2>Best — one pipeline</h2>
+        <p>Everything merged: brand file + the 20 power-design rules, optional outline approval before generating, bespoke fallback, vision QA, and a native editable PPTX export. This is the candidate for the real Create flow.</p>
+        <div class="tags"><span class="tag">Brand file</span><span class="tag b">Outline approval</span><span class="tag t">Vision QA</span><span class="tag r">Editable PPTX</span></div>
+      </div>
+    </a>
+    <a class="card hot" href="/lane/hybrid">
+      <div class="card-in">
+        <span class="num">STRATEGY 3</span>
+        <h2>Hybrid — best of each</h2>
+        <p>Everything in Strategy 1, plus a skill-style bespoke design pass: when no template fits a page (diagrams, dashboards, infographics), the AI designs that one slide as brand-styled HTML instead of flattening it to bullets.</p>
+        <div class="tags"><span class="tag">Templates first</span><span class="tag r">Bespoke fallback</span><span class="tag b">Vision QA</span></div>
+      </div>
+    </a>
+    <a class="card" href="/lane/pptx">
+      <div class="card-in">
+        <span class="num">STRATEGY 2</span>
+        <h2>Anthropic pptx skill</h2>
+        <p>The official Claude pptx skill, driven headlessly. Produces a native PowerPoint styled with the brand palette; previewed here as PDF. Slowest lane (several minutes) but the output is a real editable .pptx.</p>
+        <div class="tags"><span class="tag">Native PPTX</span><span class="tag r">Headless Claude</span></div>
+      </div>
+    </a>
+  </div>
+  <p class="hint">Suggested benchmark docs: one long strategy PDF and one short proposal PDF. Same file into all four, then compare coverage, layout variety, palette balance, and export quality.</p>
+</div>
+
+</body>
+</html>

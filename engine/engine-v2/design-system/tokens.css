@@ -1,0 +1,125 @@
+/* ============================================================================
+   Acme Design Tokens (neutral sample palette)  --  SINGLE SOURCE OF TRUTH
+   ----------------------------------------------------------------------------
+   Every Engine v2 web deck imports THIS file and references var(--pp-*) only.
+   Raw hex/rgb outside this :root block is a brand-compliance failure
+   (see scripts/validate-brand.py). Three layers: primitive -> semantic ->
+   component, mirrored in tokens.json for the token generator.
+   Palette + gradients are neutral placeholders; swap in your own brand here.
+   ============================================================================ */
+
+:root {
+  /* ---- Primitive: brand ---- */
+  --pp-purple-light: #8b5cf6;   /* light purple */
+  --pp-purple:       #8b5cf6;   /* core purple  */
+  --pp-blue:         #3b82f6;   /* brand blue   */
+  --pp-green:        #10b981;   /* success/positive */
+
+  /* ---- Primitive: neutrals (match brand ink/body/muted/border) ---- */
+  --pp-ink:          #111827;   /* headings */
+  --pp-body:         #4b5563;   /* body copy */
+  --pp-muted:        #9ca3af;   /* secondary/meta */
+  --pp-border:       #e5e7eb;
+  --pp-border-soft:  #f3f4f6;
+  --pp-white:        #ffffff;
+
+  /* ---- Primitive: gradient stops ---- */
+  --pp-grad-1: #8b5cf6;
+  --pp-grad-2: #8b5cf6;
+  --pp-grad-3: #3b82f6;
+  --pp-soft-1: #f5f3ff;
+  --pp-soft-2: #eff6ff;
+
+  /* Deep surfaces: analytics hero + dark panels only (light brand stays default) */
+  --pp-dark-1: #0f172a;
+  --pp-dark-2: #1e293b;
+
+  /* ---- Semantic ---- */
+  --pp-bg:            var(--pp-white);
+  --pp-fg:            var(--pp-ink);
+  --pp-fg-body:       var(--pp-body);
+  --pp-fg-muted:      var(--pp-muted);
+  --pp-primary:       var(--pp-purple);
+  --pp-primary-alt:   var(--pp-purple-light);
+  --pp-accent:        var(--pp-blue);
+  --pp-success:       var(--pp-green);
+  --pp-hairline:      var(--pp-border);
+  --pp-surface-soft:  var(--pp-border-soft);
+
+  /* Brand gradient: text accents + pill buttons ONLY, never dark background floods */
+  --pp-gradient: linear-gradient(90deg, var(--pp-grad-1) 0%, var(--pp-grad-2) 50%, var(--pp-grad-3) 100%);
+  /* Soft gradient: card backgrounds + slide right panels */
+  --pp-gradient-soft: linear-gradient(135deg, var(--pp-soft-1) 0%, var(--pp-soft-2) 100%);
+
+  /* ---- Typography ---- */
+  /* Inter = web headings + body. JetBrains Mono = numbers/tags/labels.       */
+  /* The on-image brand font is ON-IMAGE ONLY and deliberately NOT a web font. */
+  --pp-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --pp-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Type scale (fluid-friendly rem, desktop reference) */
+  --pp-fs-hero:    clamp(2.25rem, 4.4vw, 3.9rem);  /* cover / big statement */
+  --pp-fs-h1:      clamp(2rem, 3.6vw, 3rem);
+  --pp-fs-h2:      clamp(1.5rem, 2.6vw, 2.25rem);
+  --pp-fs-h3:      1.375rem;
+  --pp-fs-stat:    clamp(2.75rem, 5vw, 4rem);     /* metric callouts */
+  --pp-fs-body:    1.0625rem;
+  --pp-fs-small:   0.9375rem;
+  --pp-fs-label:   0.8125rem;
+
+  --pp-fw-light: 300;
+  --pp-fw-regular: 400;
+  --pp-fw-medium: 500;
+  --pp-fw-semibold: 600;
+  --pp-fw-bold: 700;
+
+  --pp-lh-tight: 1.05;
+  --pp-lh-heading: 1.15;
+  --pp-lh-body: 1.55;
+  --pp-tracking-tight: -0.02em;
+  --pp-tracking-label: 0.08em;
+
+  /* ---- Spacing (4px base) ---- */
+  --pp-space-1: 0.25rem;
+  --pp-space-2: 0.5rem;
+  --pp-space-3: 0.75rem;
+  --pp-space-4: 1rem;
+  --pp-space-5: 1.25rem;
+  --pp-space-6: 1.5rem;
+  --pp-space-8: 2rem;
+  --pp-space-10: 2.5rem;
+  --pp-space-12: 3rem;
+  --pp-space-16: 4rem;
+  --pp-space-20: 5rem;
+
+  /* ---- Radius ---- */
+  --pp-radius-sm: 8px;
+  --pp-radius: 14px;
+  --pp-radius-lg: 22px;
+  --pp-radius-pill: 999px;
+
+  /* ---- Shadows (soft, brand-neutral) ---- */
+  --pp-shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.06);
+  --pp-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+  --pp-shadow-lg: 0 24px 60px rgba(139, 92, 246, 0.18);
+
+  /* ---- Motion ---- */
+  --pp-dur-fast: 200ms;
+  --pp-dur: 500ms;
+  --pp-dur-slow: 900ms;
+  --pp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Component: CTA pill ---- */
+  --pp-cta-bg: var(--pp-gradient);
+  --pp-cta-fg: var(--pp-white);
+  --pp-cta-radius: var(--pp-radius-pill);
+  --pp-cta-pad-x: var(--pp-space-6);
+  --pp-cta-pad-y: var(--pp-space-3);
+
+  /* ---- Component: card ---- */
+  --pp-card-bg: var(--pp-white);
+  --pp-card-border: var(--pp-hairline);
+  --pp-card-radius: var(--pp-radius-lg);
+  --pp-card-shadow: var(--pp-shadow);
+  --pp-card-pad: var(--pp-space-6);
+}

@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://app.example.com/presentation-agent/deck-spec.schema.json",
+  "title": "Acme Deck Spec",
+  "description": "The single structured artifact produced by one AI generation. Every output renderer (web, PPTX, PDF, Canva) consumes THIS, not free-form HTML. Validating a spec against this schema before rendering is what makes broken decks impossible by construction: no unknown slide type, no missing required copy, no asset reference that isn't a manifest id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "meta", "mode", "outputs", "slides"],
+  "properties": {
+    "specVersion": {
+      "type": "string",
+      "const": "2.0",
+      "description": "Deck spec format version. Renderers assert on this."
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "audience"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "subtitle": { "type": "string", "maxLength": 200 },
+        "presenter": { "type": "string", "maxLength": 120 },
+        "audience": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Who this deck is for. Required: drives voice and slide selection." },
+        "takeaway": { "type": "string", "maxLength": 240, "description": "The one thing the audience should walk away thinking. Anchors the narrative." },
+        "date": { "type": "string", "description": "Display date, free text (e.g. 'June 2026'). Not ISO-forced because it is shown verbatim." },
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,60}$", "description": "URL slug for the hosted web deck: <APP_DOMAIN>/presentation-agent/p/<slug>." },
+        "password": { "type": ["string", "null"], "description": "Optional plain password; renderer hashes it. Null = public." }
+      }
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["template", "magic"],
+      "description": "template = approved slide types only, no invented layouts. magic = creative latitude, still brand-locked."
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Which renderers run for this deck. Web is always true; the other three are opt-in per generation.",
+      "required": ["web"],
+      "properties": {
+        "web": { "type": "boolean", "const": true },
+        "pptx": { "type": "boolean", "default": false },
+        "pdf": { "type": "boolean", "default": false },
+        "canva": { "type": "boolean", "default": false }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Brand tokens. Defaults are the locked brand palette; overrides are constrained so a deck can never leave the brand.",
+      "properties": {
+        "purple": { "$ref": "#/$defs/hex", "default": "#8b5cf6" },
+        "lightPurple": { "$ref": "#/$defs/hex", "default": "#8b5cf6" },
+        "blue": { "$ref": "#/$defs/hex", "default": "#3b82f6" },
+        "ink": { "$ref": "#/$defs/hex", "default": "#111827" },
+        "body": { "$ref": "#/$defs/hex", "default": "#4B5563" },
+        "green": { "$ref": "#/$defs/hex", "default": "#10b981" },
+        "accent": { "type": "string", "enum": ["purple", "blue", "green"], "default": "purple", "description": "Primary accent used for gradient text and pills." }
+      }
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 16,
+      "description": "Ordered slides. First must be cover, last must be call-to-action (renderer asserts). 4-16 per the agent rulebook.",
+      "items": { "$ref": "#/$defs/slide" }
+    }
+  },
+
+  "$defs": {
+    "hex": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "assetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Reference to an asset. `id` MUST exist in manifest.json. The renderer hard-fails on an unknown id instead of shipping a broken image. `role` tells the layout engine and PPTX/Canva renderers what the asset is for.",
+      "required": ["id", "role"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "manifest.json asset id (stable slug), e.g. 'logo-horizontal-color' or 'artboard-2'." },
+        "role": {
+          "type": "string",
+          "enum": ["device", "screen", "bg-screen", "scene", "character", "card", "hero", "logo", "icon", "photo", "video"],
+          "description": "Maps to sr-* CSS classes on web and to placement rules in PPTX/Canva."
+        },
+        "alt": { "type": "string", "description": "Accessibility text. Required for photos/heroes at render time; renderer warns if missing." }
+      }
+    },
+    "stat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "label"],
+      "properties": {
+        "value": { "type": "string", "maxLength": 24, "description": "e.g. '5,000' or '28%'. Specific numbers, never 'thousands'." },
+        "label": { "type": "string", "maxLength": 80 }
+      }
+    },
+    "bullet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "emphasis": { "type": "boolean", "default": false }
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "body": { "type": "string", "maxLength": 200 },
+        "icon": { "$ref": "#/$defs/assetRef" }
+      }
+    },
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "photo"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "role": { "type": "string", "maxLength": 80 },
+        "photo": { "$ref": "#/$defs/assetRef" }
+      }
+    },
+    "animation": {
+      "type": "string",
+      "enum": ["hero-reveal", "fade-up", "split-text", "stat-countup", "stagger-cards", "parallax-panel", "section-wipe", "none"],
+      "default": "fade-up",
+      "description": "Choreography preset the web renderer maps to a GSAP timeline. All presets honor prefers-reduced-motion. PPTX/PDF ignore this."
+    },
+    "slide": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{1,40}$" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "cover",
+            "summary",
+            "section-divider",
+            "txt-character-ui",
+            "txt-character-fun-ui",
+            "application-screen",
+            "application-multi-screen",
+            "feature-highlight",
+            "analytics-dash-ai",
+            "people",
+            "call-to-action"
+          ],
+          "description": "Maps 1:1 to a master-template data-title. No invented types allowed."
+        },
+        "headline": { "type": "string", "maxLength": 120 },
+        "subhead": { "type": "string", "maxLength": 200 },
+        "body": { "type": "string", "maxLength": 420, "description": "Max ~5 lines rendered. Voice rules apply (fragments over sentences)." },
+        "bullets": { "type": "array", "items": { "$ref": "#/$defs/bullet" }, "maxItems": 6 },
+        "stats": { "type": "array", "items": { "$ref": "#/$defs/stat" }, "maxItems": 4 },
+        "cards": { "type": "array", "items": { "$ref": "#/$defs/card" }, "maxItems": 4 },
+        "people": { "type": "array", "items": { "$ref": "#/$defs/person" }, "maxItems": 8 },
+        "quote": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "text": { "type": "string", "maxLength": 320 },
+            "attribution": { "type": "string", "maxLength": 120 }
+          }
+        },
+        "assets": { "type": "array", "items": { "$ref": "#/$defs/assetRef" }, "maxItems": 6, "description": "Right-panel / layout assets in z-order (first = back). Renderer composes per role." },
+        "animation": { "$ref": "#/$defs/animation" },
+        "notes": { "type": "string", "maxLength": 1200, "description": "Speaker notes. Rendered into PPTX notes; hidden on web/PDF." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "cover" } } },
+          "then": {
+            "required": ["headline", "assets"],
+            "description": "Cover MUST have a device mockup asset (role=device) alone in the right panel per the agent rulebook; no scene layered on top."
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "call-to-action" } } },
+          "then": { "required": ["headline"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "feature-highlight" } } },
+          "then": { "required": ["cards"], "properties": { "cards": { "minItems": 3 } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "people" } } },
+          "then": { "required": ["people"], "properties": { "people": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["txt-character-ui", "txt-character-fun-ui"] } } },
+          "then": { "required": ["headline"], "anyOf": [ { "required": ["stats"] }, { "required": ["bullets"] } ] }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["application-screen", "application-multi-screen", "analytics-dash-ai"] } } },
+          "then": { "required": ["headline", "assets"] }
+        }
+      ]
+    }
+  }
+}

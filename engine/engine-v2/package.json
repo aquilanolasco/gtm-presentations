@@ -1,0 +1,18 @@
+{
+  "name": "acme-presentation-engine-v2",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Acme Presentation Engine v2 - one deck spec, four outputs.",
+  "scripts": {
+    "render:web": "node render-web.mjs"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

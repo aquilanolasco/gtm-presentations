@@ -1,0 +1,41 @@
+/* Minimal neutral theme for the Presentations module. The original app-wide stylesheet (brand
+   palette, fonts, every other module's styles) was removed; these are the tokens the module reads. */
+:root,
+[data-theme="light"] {
+  --brand-primary: #3b82f6;
+  --brand-accent: #8b5cf6;
+  --brand-dark: #0f172a;
+  --brand-light: #f8fafc;
+
+  --accent: var(--brand-primary);
+  --ink: #0f172a;
+  --body: #334155;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-soft: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --card: #ffffff;
+  --page-bg: #f8fafc;
+}
+
+[data-theme="dark"] {
+  --accent: #60a5fa;
+  --ink: #f1f5f9;
+  --body: #cbd5e1;
+  --muted: #94a3b8;
+  --border: #334155;
+  --border-soft: #1e293b;
+  --surface: #0f172a;
+  --surface-2: #1e293b;
+  --card: #111827;
+  --page-bg: #020617;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  background: var(--page-bg);
+  color: var(--body);
+}

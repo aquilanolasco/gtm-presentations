@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acme Presentation</title>
+<meta property="og:title" content="Acme Presentation">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#fff;font-family:Inter,system-ui,-apple-system,sans-serif;overflow:hidden}
+  #deck{position:fixed;inset:0;width:100%;height:100%;border:0;display:block}
+  .bar{position:fixed;top:16px;right:22px;z-index:99999;display:flex;align-items:center;gap:8px}
+  .ctl{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid #e5e7eb;color:#111827;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600;text-decoration:none;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.1);backdrop-filter:blur(8px);white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .ctl:hover{background:#fff}
+  .ctl svg{width:13px;height:13px}
+  /* signature + currency pickers, styled to match the pills (no native OS chrome) */
+  select.sig{appearance:none;-webkit-appearance:none;padding:9px 30px 9px 15px;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#111827;border:1px solid #e5e7eb;border-radius:999px;background:rgba(255,255,255,.92) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 11px center;box-shadow:0 2px 10px rgba(0,0,0,.1);backdrop-filter:blur(8px);cursor:pointer}
+</style></head>
+<body>
+<iframe id="deck" title="Acme presentation" allow="fullscreen clipboard-read clipboard-write"></iframe>
+<div class="bar" id="bar"></div>
+<script>
+(function(){
+  var SVG = {
+    dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>',
+    share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5 8.6 10.5"/></svg>',
+    fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>',
+    back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>'
+  };
+  // presenters for the closing-page CTA signature; "" = the deck's default presenter (base file)
+  var PEOPLE = [
+    { k:'', l:'Signature: default' },
+    { k:'jane', l:'Jane Doe' },
+    { k:'john', l:'John Smith' },
+    { k:'alex', l:'Alex Lee' },
+    { k:'sam', l:'Sam Taylor' }
+  ];
+  var parts = location.pathname.split('/').filter(Boolean);     // presentations/p/<slug>/<page>  OR  public/presentations/<slug>/<page>
+  var isPublic = parts[0] === 'public';
+  var slug = parts[2] || '';
+  var page = parts[3] || '';
+  var base = isPublic ? '/public/presentations/' + slug : '/presentations/p/' + slug;
+  // A key-gated deck (opened with ?k=<access key>) ships one fixed CTA signature only.
+  // Slug + key are placeholders; the original deck-specific values were removed.
+  var AGM = (slug === 'example-gated-deck');
+  var AGMK = '<DECK_ACCESS_KEY>';
+  var pubLink = location.origin + '/public/presentations/' + slug;
+  if (AGM) pubLink = location.origin + '/p/example-gated-deck/?k=' + AGMK;
+  var deck = document.getElementById('deck');
+
+  // Currency the deck shows its figures in. The deck converts its own text on {type:"ppSetCur"}
+  // and reports {type:"ppCur", cur, base} on load and on every change; a deck that never reports
+  // (older generated decks) keeps the picker hidden. The pick sticks per browser (same key the
+  // decks use) and rides in ?cur= so Share hands the prospect the deck in that currency.
+  var CURS = ['USD', 'AUD', 'EUR', 'GBP'];
+  var curBase = 'USD', cur = '';
+  try { cur = (new URLSearchParams(location.search).get('cur') || '').toUpperCase(); } catch(e) {}
+  if (CURS.indexOf(cur) < 0) { cur = ''; if (!isPublic) { try { cur = (localStorage.getItem('ppCur') || '').toUpperCase(); } catch(e) {} if (CURS.indexOf(cur) < 0) cur = ''; } }
+  deck.src = '/p/' + slug + '/deck/' + (AGM ? '?k=' + AGMK : (cur ? '?cur=' + cur : '')) + (page ? '#' + page : '');
+
+  // Downloads: per-presenter variant files are <slug>--<key>.(pptx|pdf). Public viewers use the
+  // no-auth copies under /p/<slug>/; the authenticated viewer uses the gated /presentation-exports/.
+  var sigKey = AGM ? 'jane' : '';
+  var dlBase = isPublic ? ('/p/' + slug + '/' + slug) : ('/presentation-exports/' + slug + '/' + slug);
+  // ?t= busts any cached copy of a previous export under the same filename (CF + browser)
+  function dlHref(ext){ return dlBase + (sigKey ? '--' + sigKey : '') + '.' + ext + '?t=' + Date.now(); }
+  function shareLink(){ return pubLink + (!AGM && cur && cur !== curBase ? '?cur=' + cur : ''); }
+
+  function pill(tag, inner, attrs, onclick){
+    var el = document.createElement(tag); el.className = 'ctl'; el.innerHTML = inner;
+    if (attrs) for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (onclick) el.addEventListener('click', onclick);
+    return el;
+  }
+  var bar = document.getElementById('bar');
+
+  // Currency picker is INTERNAL-only (the public link carries the presenter's choice in ?cur=).
+  var curSel = null;
+  if (!isPublic && !AGM) {
+    curSel = document.createElement('select'); curSel.className = 'sig'; curSel.style.display = 'none';
+    curSel.setAttribute('title', 'Currency the deck shows its figures in');
+    CURS.forEach(function(c){ var o = document.createElement('option'); o.value = c; o.textContent = 'Currency: ' + c; curSel.appendChild(o); });
+    curSel.value = cur || curBase;
+    curSel.addEventListener('change', function(){ setCur(curSel.value); });
+    bar.appendChild(curSel);
+  }
+  // reflect a currency the deck reports (no storage write: the deck reporting its base is not a pick)
+  function reflect(c){
+    cur = c;
+    if (curSel) curSel.value = c;
+    try { var u = new URL(location.href); if (c === curBase) u.searchParams.delete('cur'); else u.searchParams.set('cur', c); history.replaceState(null, '', u); } catch(e) {}
+  }
+  // the presenter picked one: remember it and tell the deck
+  function setCur(c){
+    reflect(c);
+    try { localStorage.setItem('ppCur', c); } catch(e) {}
+    try { deck.contentWindow.postMessage({ type: 'ppSetCur', cur: c }, '*'); } catch(e) {}
+  }
+  addEventListener('message', function(e){
+    var d = e.data || {};
+    if (d.type !== 'ppCur' || CURS.indexOf(d.cur) < 0) return;
+    if (CURS.indexOf(d.base) >= 0) curBase = d.base;
+    if (curSel) curSel.style.display = '';
+    if (d.cur !== cur) reflect(d.cur);
+  });
+
+  var pptxA = pill('a', SVG.dl + '<span>PPTX</span>', { href: dlHref('pptx'), download: '' });
+  var pdfA  = pill('a', SVG.dl + '<span>PDF</span>',  { href: dlHref('pdf'),  download: '' });
+  // Signature picker is INTERNAL-only. The public link always uses the deck's own author
+  // ("Prepared by") signature, the base file, with no chooser.
+  if (!isPublic && !AGM) {
+    var sel = document.createElement('select'); sel.className = 'sig';
+    sel.setAttribute('title', 'Whose CTA signature appears on the last page of the download');
+    PEOPLE.forEach(function(p){ var o = document.createElement('option'); o.value = p.k; o.textContent = p.l; sel.appendChild(o); });
+    sel.addEventListener('change', function(){ sigKey = sel.value; pptxA.setAttribute('href', dlHref('pptx')); pdfA.setAttribute('href', dlHref('pdf')); });
+    bar.appendChild(sel);
+  }
+  bar.appendChild(pptxA);
+  bar.appendChild(pdfA);
+  var shareBtn = pill('button', SVG.share + '<span>Share</span>', null, function(){
+    navigator.clipboard.writeText(shareLink()).then(function(){ var s = shareBtn.querySelector('span'); s.textContent = 'Copied'; setTimeout(function(){ s.textContent = 'Share'; }, 1500); }).catch(function(){});
+  });
+  bar.appendChild(shareBtn);
+  bar.appendChild(pill('button', SVG.fs + '<span>Full screen</span>', null, function(){
+    try { if (document.fullscreenElement) document.exitFullscreen(); else (deck.requestFullscreen || deck.webkitRequestFullscreen).call(deck); } catch(e){}
+  }));
+  if (!isPublic) bar.appendChild(pill('a', SVG.back + 'Presentations', { href: '/presentations' }));
+
+  // reflect the deck's current slide into the viewer URL (/.../<page>), keeping ?cur=
+  var last = page;
+  setInterval(function(){
+    try {
+      var h = (deck.contentWindow.location.hash || '').replace(/^#/, '');
+      if (h && h !== last) { last = h; history.replaceState(null, '', base + '/' + h + location.search); }
+    } catch(e) {}
+  }, 500);
+})();
+</script>
+</body></html>

@@ -1,0 +1,62 @@
+/* Shared slide patterns for Sales / Proposal decks (mirrors the v2 inline kit) */
+.solve-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.4rem;text-align:left}
+.solve-hero{grid-row:span 2;background:var(--grad-deep);color:#fff;border-radius:28px;padding:clamp(1.8rem,2.6vw,2.8rem);display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow)}
+.solve-hero .big{font-family:var(--disp);font-weight:400;font-size:clamp(3.2rem,4.6vw,4.6rem);line-height:1;background:linear-gradient(100deg,#ffffff,#b7e6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.solve-hero h3{color:#fff;font-size:clamp(1.4rem,1.8vw,1.8rem);margin-top:1rem}
+.solve-hero p{color:rgba(255,255,255,.82);font-size:clamp(1.05rem,1.3vw,1.3rem);line-height:1.4;margin-top:.8rem}
+.solve-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:clamp(1.4rem,2vw,2rem);box-shadow:var(--shadow-sm)}
+.solve-card .n{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,2.8vw,2.8rem);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.solve-card h3{font-size:clamp(1.15rem,1.4vw,1.4rem);margin-top:.7rem}
+.solve-card p{font-size:clamp(1rem,1.2vw,1.2rem);color:var(--body);line-height:1.38;margin-top:.5rem}
+.cfo-band{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.4rem;text-align:left}
+.cfo-band>div{background:var(--grad-deep);border-radius:24px;padding:clamp(1.5rem,2.2vw,2.3rem) clamp(1.3rem,1.9vw,2rem);box-shadow:var(--shadow)}
+.cfo-band .v{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,3.6vw,3.8rem);line-height:1;color:#fff}
+.cfo-band .l{font-size:clamp(1rem,1.25vw,1.25rem);color:rgba(255,255,255,.82);margin-top:.6rem;line-height:1.3;text-wrap:balance}
+.res-row{display:grid;grid-template-columns:1.7fr 1fr;gap:clamp(1rem,1.5vw,1.4rem);margin-top:clamp(1rem,1.5vw,1.4rem);text-align:left}
+.res-quote{background:#fff;border:1px solid var(--border);border-radius:24px;padding:clamp(1.6rem,2.3vw,2.4rem);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;justify-content:space-between}
+.res-quote blockquote{font-family:var(--disp);font-weight:344;font-size:clamp(1.35rem,1.8vw,1.85rem);line-height:1.22;color:var(--ink);text-wrap:balance;margin:0}
+.res-quote cite{display:block;font-style:normal;margin-top:1.1rem;font-size:clamp(.95rem,1.1vw,1.1rem);color:var(--muted)}
+.res-quote cite b{color:var(--ink);font-weight:600}
+.res-side{display:flex;flex-direction:column;gap:clamp(1rem,1.5vw,1.4rem)}
+.res-mini{flex:1;background:#fff;border:1px solid var(--border);border-radius:24px;padding:clamp(1.2rem,1.7vw,1.8rem);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;justify-content:center}
+.res-mini .v{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,2.8vw,3rem);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.res-mini .l{font-size:clamp(1rem,1.2vw,1.2rem);color:var(--body);margin-top:.5rem;line-height:1.3}
+.steps6{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.4rem;text-align:left;max-width:1240px;margin-inline:auto}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,1.3vw,1.3rem);margin-top:2.6rem;text-align:left}
+.step{background:#fff;border:1px solid var(--border);border-radius:20px;padding:clamp(1.2rem,1.7vw,1.8rem);box-shadow:var(--shadow-sm)}
+.step .k{font-family:var(--mono);font-weight:700;color:var(--purple);font-size:clamp(.85rem,1vw,1rem);letter-spacing:.06em}
+.step h3{font-size:clamp(1.15rem,1.4vw,1.45rem);margin-top:.55rem}
+.step p{font-size:clamp(.95rem,1.15vw,1.15rem);color:var(--body);line-height:1.35;margin-top:.45rem}
+.split2{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(1.6rem,2.6vw,2.8rem);align-items:center;margin-top:2.4rem;text-align:left}
+.chiprow{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;margin-top:2.2rem}
+.chip{font-family:var(--mono);font-size:clamp(.85rem,1vw,1rem);font-weight:600;color:var(--purple);background:#f5f3ff;border-radius:999px;padding:.75rem 1.5rem;white-space:nowrap}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.4rem;text-align:left}
+.voice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.6rem;text-align:left}
+.price-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.3rem;border:1px solid var(--border);border-radius:16px;font-size:clamp(1rem,1.25vw,1.3rem)}
+.price-row.win{background:linear-gradient(135deg,#f5f3ff,#eff6ff);border-color:#dcd4ff;font-weight:600}
+.price-row .tag{font-family:var(--mono);font-size:clamp(.8rem,.95vw,.95rem);font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,1.5vw,1.4rem);margin-top:2.4rem;text-align:left}
+.mod-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:clamp(1.5rem,2.1vw,2.2rem);box-shadow:var(--shadow-sm)}
+.mod-card.wide{grid-column:span 2;background:var(--grad-deep)}
+.mod-card.wide h3{color:#fff}
+.mod-card.wide p{color:rgba(255,255,255,.85)}
+.mod-card.wide .mn{color:rgba(255,255,255,.7)}
+.mod-card .mn{font-family:var(--mono);font-size:clamp(.85rem,1vw,1rem);font-weight:700;color:var(--purple);letter-spacing:.08em}
+.mod-card h3{font-size:clamp(1.3rem,1.6vw,1.65rem);margin-top:.6rem}
+.mod-card p{font-size:clamp(1.05rem,1.25vw,1.3rem);color:var(--body);line-height:1.34;margin-top:.55rem;text-wrap:balance}
+.ledger{display:flex;flex-direction:column;gap:.8rem;margin-top:2.4rem;text-align:left}
+.ledger .lrow{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:1rem;align-items:center;background:#fff;border:1px solid var(--border);border-radius:16px;padding:1rem 1.4rem;font-size:clamp(1rem,1.25vw,1.3rem)}
+.ledger .lrow.total{background:var(--grad-deep);color:#fff;border-color:transparent;font-weight:600}
+.ledger .lrow .m{font-family:var(--mono);font-size:clamp(.85rem,1vw,1rem);color:var(--muted)}
+.ledger .lrow.total .m{color:rgba(255,255,255,.75)}
+@media(max-width:1100px){.solve-grid{grid-template-columns:1fr 1fr}.solve-hero{grid-row:auto;grid-column:span 2}.cfo-band{grid-template-columns:repeat(2,1fr)}.res-row{grid-template-columns:1fr}.steps6{grid-template-columns:1fr}.steps4{grid-template-columns:repeat(2,1fr)}.split2{grid-template-columns:1fr}.quad{grid-template-columns:1fr}.voice-grid{grid-template-columns:1fr}.mod-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* Faded industry background photo on light slides (opt-in via .hasbg on the section).
+   The photo sits behind the slide content at low opacity with a soft top/bottom mask so
+   it reads as a subtle atmosphere, never competing with the copy. Content wrapper is
+   lifted above it. Only applied to light/white slides that make sense. */
+.pp-slide.hasbg{position:relative}
+.pp-slide.hasbg>.slide-bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;
+  opacity:.10;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.85) 45%,rgba(0,0,0,.45) 100%);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.85) 45%,rgba(0,0,0,.45) 100%)}
+.pp-slide.hasbg>.pp-inner{position:relative;z-index:1}
